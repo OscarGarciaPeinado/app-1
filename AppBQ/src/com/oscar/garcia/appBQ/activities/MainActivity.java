@@ -1,4 +1,8 @@
-package com.oscar.garcia.appBQ;
+package com.oscar.garcia.appBQ.activities;
+
+import com.oscar.garcia.appBQ.R;
+import com.oscar.garcia.appBQ.R.layout;
+import com.oscar.garcia.appBQ.R.menu;
 
 import android.os.Bundle;
 import android.app.Activity;
