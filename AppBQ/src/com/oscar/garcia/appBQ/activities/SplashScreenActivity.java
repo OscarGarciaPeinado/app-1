@@ -24,7 +24,7 @@ public class SplashScreenActivity extends Activity {
 		Thread myThread = new Thread() {
 			public void run() {
 				try {
-					sleep(6000);
+					sleep(4000);
 					finish();
 
 					Intent main = new Intent(SplashScreenActivity.this,
