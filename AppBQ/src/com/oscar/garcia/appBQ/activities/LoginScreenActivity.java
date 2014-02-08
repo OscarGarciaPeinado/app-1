@@ -1,6 +1,5 @@
 package com.oscar.garcia.appBQ.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,28 +8,29 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.dropbox.client2.android.AndroidAuthSession;
+import com.dropbox.client2.exception.DropboxException;
 import com.oscar.garcia.appBQ.R;
-import com.oscar.garcia.appBQ.activities.utils.managers.DropboxHelper;
+import com.oscar.garcia.appBQ.utils.managers.DropboxFileManager;
+import com.oscar.garcia.appBQ.utils.managers.LoginHelper;
 
-public class LoginScreenActivity extends Activity {
+public class LoginScreenActivity extends LoginHelper {
 
-	public DropboxHelper _helper;
 	private Button _loginButton;
 	private SharedPreferences _preferences;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		createSession();
 		setContentView(R.layout.activity_login_screen);
-
-		_helper = new DropboxHelper(this);
-
 		_loginButton = (Button) findViewById(R.id.login_button);
 		_loginButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				_helper.start();
+				login();
 			}
 		});
 
@@ -39,17 +39,20 @@ public class LoginScreenActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		if (_helper.is_logged())
-			if (_helper.getmDBApi().getSession().authenticationSuccessful()) {
-				try {
-					_helper.getmDBApi().getSession().finishAuthentication();
-					_helper.storeAuth(_helper.getmDBApi().getSession());
-					Intent intent = new Intent(this, MainAppBqActivity.class);
-					startActivity(intent);
-				} catch (IllegalStateException e) {
-					Log.i("AppDBinfo", "No se ha podido autentificar.", e);
-				}
+		AndroidAuthSession session = _mApi.getSession();
+		if (session.authenticationSuccessful()) {
+			try {
+				session.finishAuthentication();
+				System.out.println(_mApi.accountInfo());
+				storeAuth(session);
+				DropboxFileManager.get(_mApi);
+				Intent intent = new Intent(this, MainAppBqActivity.class);
+				startActivity(intent);
+			} catch (IllegalStateException e) {
+				Log.i("App BQ", "Error authenticating", e);
+			} catch (DropboxException e) {
+				e.printStackTrace();
 			}
+		}
 	}
 }

@@ -1,4 +1,4 @@
-package com.oscar.garcia.appBQ.activities.entities;
+package com.oscar.garcia.appBQ.entities;
 
 import java.util.Date;
 
