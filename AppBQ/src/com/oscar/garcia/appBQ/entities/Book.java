@@ -14,25 +14,23 @@ import com.dropbox.client2.RESTUtility;
 import com.oscar.garcia.appBQ.assests.Constants;
 
 public class Book implements Comparable {
+	private static int contador = 0;
+	private int _id;
 	private String _tittle;
 	private Date _date;
 	private String _dropBoxPath;
+
 	private String _internalPath;
 	private boolean _downloaded;
 	private String _fileName;
 	private Bitmap _coverImage;
-
-	public Book(String _tittle, Date _date, String _path, String _fileName) {
-		super();
-		this._tittle = _tittle;
-		this._date = _date;
-		this._dropBoxPath = _path;
-		this._fileName = _fileName;
-		_downloaded = false;
-	}
+	private Entry _entry;
 
 	public Book(Entry entry) {
 		// TODO: TIENES QUE PARSEAR UN ENTRY A UN BOOK, IMPORTANTE!
+		_id = contador;
+		Book.contador = Book.contador + 1;
+		_entry = entry;
 		_date = RESTUtility.parseDate(entry.modified);
 		_fileName = entry.fileName();
 		_dropBoxPath = entry.path;
@@ -48,7 +46,7 @@ public class Book implements Comparable {
 			_coverImage = BitmapFactory.decodeStream(book.getCoverImage()
 					.getInputStream());
 		} catch (Exception e) {
-	
+
 		}
 	}
 
@@ -77,7 +75,7 @@ public class Book implements Comparable {
 	/**
 	 * @return the _fileName
 	 */
-	public String get_fileName() {
+	public String getFileName() {
 		return _fileName;
 	}
 
@@ -133,12 +131,42 @@ public class Book implements Comparable {
 		return _downloaded;
 	}
 
+	/**
+	 * @return the _entry
+	 */
+	public Entry get_entry() {
+		return _entry;
+	}
+
+	/**
+	 * @return the _id
+	 */
+	public int get_id() {
+		return _id;
+	}
+
+	/**
+	 * @param _dropBoxPath
+	 *            the _dropBoxPath to set
+	 */
+	public void set_dropBoxPath(String _dropBoxPath) {
+		this._dropBoxPath = _dropBoxPath;
+	}
+
+	/**
+	 * @param _internalPath
+	 *            the _internalPath to set
+	 */
+	public void set_internalPath(String _internalPath) {
+		this._internalPath = _internalPath;
+	}
+
 	@Override
 	public int compareTo(Object another) {
 		int aux = 0;
 		switch (Constants.getTYPE_COMPARATOR()) {
 		case 1:
-			aux = _fileName.compareTo(((Book) another).get_fileName());
+			aux = _fileName.compareTo(((Book) another).getFileName());
 			break;
 		case 2:
 			aux = _date.compareTo(((Book) another).get_date());

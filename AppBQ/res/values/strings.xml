@@ -7,5 +7,6 @@
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
     <string name="title_activity_login_screen">LoginScreenActivity</string>
     <string name="title_activity_main_app_bq">MainAppBqActivity</string>
+    <string name="title_activity_details">DetailsActivity</string>
 
 </resources>
