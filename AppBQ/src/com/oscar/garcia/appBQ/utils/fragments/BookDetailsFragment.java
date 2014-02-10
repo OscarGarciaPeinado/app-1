@@ -6,20 +6,21 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import nl.siegmann.epublib.domain.Book;
 import nl.siegmann.epublib.epub.EpubReader;
 import android.app.Activity;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.oscar.garcia.appBQ.R;
+import com.oscar.garcia.appBQ.entities.Book;
 import com.oscar.garcia.appBQ.utils.managers.DropboxFileManager;
 
 public class BookDetailsFragment extends Fragment {
+	private TextView _titleDetailTextView, _dateDetailTextView, _authorDetailTextView;
 
 	private Activity _activity;
 	private DropboxFileManager _fileManager;
@@ -38,14 +39,21 @@ public class BookDetailsFragment extends Fragment {
 	}
 
 	public void showDetails(int id) {
-		AssetManager assetManager = _activity.getAssets();
+
+		_titleDetailTextView = (TextView) _activity.findViewById(R.id.titleDetailTextview);
+		_dateDetailTextView = (TextView) _activity.findViewById(R.id.dateDetailTextview);
+		_authorDetailTextView = (TextView) _activity.findViewById(R.id.authorDetailTextview);
+		Book book = _fileManager.getBookById(id);
+		_titleDetailTextView.setText("Titulo: " + book.getFileName());
+		_dateDetailTextView.setText("Ultima modificacion: " + book.get_date());
+		_authorDetailTextView.setText("Autor: ");
 		File file;
 		try {
 			file = new File(_fileManager.getBookById(id).get_internalPath());
 			InputStream epubInputStream = new BufferedInputStream(new FileInputStream(file));
 			EpubReader reader = new EpubReader();
-			Book book = reader.readEpub(epubInputStream);
-			book.getCoverPage();
+			// Book book = reader.readEpub(epubInputStream);
+			// book.getCoverPage();
 
 		} catch (IOException e) {
 			e.printStackTrace();

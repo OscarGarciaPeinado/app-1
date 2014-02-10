@@ -6,14 +6,12 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -60,7 +58,7 @@ public class BookListFragment extends Fragment {
 			_books = arrayListToArrayBook();
 		} else {
 			showDialog();
-			_fileManager.createListBooks();
+			_fileManager.searchAllFiles();
 			_books = arrayListToArrayBook();
 		}
 
@@ -93,8 +91,9 @@ public class BookListFragment extends Fragment {
 			_thisTime = SystemClock.uptimeMillis();
 
 			if (_thisTime > _prevTime) {
-				if ((_thisTime - _prevTime) <= ViewConfiguration.getDoubleTapTimeout()) {
+				if ((_thisTime - _prevTime) <= 600) {
 					// Ejecuta la acción al hacer doble click
+					Log.i(Constants.TAG_INFO, "Se ha elegido: " + position);
 					_listener.onBookSelected(position);
 				} else {
 					_firstTap = true;
@@ -190,22 +189,8 @@ public class BookListFragment extends Fragment {
 	public void showDialog() {
 		AlertDialog.Builder dialog = new AlertDialog.Builder(_fragment.getActivity());
 
-		dialog.setMessage("No se ha encontrado el directorio AppBQ, ¿Desea que AppBQ busque automáticamente los libros existentes?");
-		dialog.setCancelable(true);
-		dialog.setNegativeButton("No", new OnClickListener() {
+		dialog.setMessage("No se ha encontrado el directorio AppBQ, La aplicación buscará automáticamente en todas las carpetas de dropbox.");
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-
-			}
-		});
-		dialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				_fileManager.searchAllFiles();
-			}
-		});
 		dialog.show();
 	}
 

@@ -94,12 +94,11 @@ public class DropboxFileManager {
 				if (nodo.isDir) {
 					fifo.addAll(_mApi.metadata(auxPath, 0, null, true, null).contents);
 				} else {
-					// TODO: Comprobar que es un fichero .epub
 					if (isEbook(nodo))
 						booksEntry.add(nodo);
 				}
 			}
-
+			System.out.println("parar");
 		} catch (DropboxUnlinkedException e) {
 			// The AuthSession wasn't properly authenticated or user unlinked.
 		} catch (DropboxPartialFileException e) {
@@ -143,6 +142,7 @@ public class DropboxFileManager {
 			_mErrorMsg = "Unknown error.  Try again.";
 		}
 		_booksListEntry = booksEntry;
+		createListBooks();
 	}
 
 	/**
